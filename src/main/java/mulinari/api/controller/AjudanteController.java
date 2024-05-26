@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ajudantes")
@@ -20,6 +21,13 @@ public class AjudanteController {
     @GetMapping
     public List<Ajudante> getAjudantes() {
         return repository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Ajudante>> getAjudante(@PathVariable Long id) {
+        Optional<Ajudante> ajudante = repository.findById(id);
+
+        return ResponseEntity.ok().body(ajudante);
     }
 
     @PostMapping
