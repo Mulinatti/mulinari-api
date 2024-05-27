@@ -27,7 +27,10 @@ public class AjudanteController {
     public ResponseEntity<Optional<Ajudante>> getAjudante(@PathVariable Long id) {
         Optional<Ajudante> ajudante = repository.findById(id);
 
-        return ResponseEntity.ok().body(ajudante);
+        if(ajudante.isPresent())
+            return ResponseEntity.ok().body(ajudante);
+
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

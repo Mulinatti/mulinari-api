@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/servicos")
@@ -42,6 +43,16 @@ public class ServicoController {
         }
 
         return ResponseEntity.badRequest().body("Informações incorretas enviadas");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Servico>> getAjudante(@PathVariable Long id) {
+        Optional<Servico> servico = servicoRepository.findById(id);
+
+        if(servico.isPresent())
+            return ResponseEntity.ok().body(servico);
+
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
