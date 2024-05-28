@@ -31,7 +31,7 @@ public class Ajudante {
     @Column(nullable = false)
     private int idade;
 
-    @ManyToMany(mappedBy = "ajudantes", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "ajudantes")
     @JsonIgnoreProperties("ajudantes")
     List<Servico> servicos;
 

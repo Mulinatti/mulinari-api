@@ -6,6 +6,7 @@ import mulinari.api.ajudante.AjudanteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,19 @@ public class AjudanteController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Corpo da requisição incorreto");
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletarAjudante(@PathVariable Long id) {
+        Optional<Ajudante> ajudante = repository.findById(id);
+
+        if(ajudante.isPresent()) {
+            repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
 

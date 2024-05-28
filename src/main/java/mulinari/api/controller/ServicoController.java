@@ -46,7 +46,7 @@ public class ServicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Servico>> getAjudante(@PathVariable Long id) {
+    public ResponseEntity<Optional<Servico>> getServico(@PathVariable Long id) {
         Optional<Servico> servico = servicoRepository.findById(id);
 
         if(servico.isPresent())
@@ -58,5 +58,18 @@ public class ServicoController {
     @GetMapping
     public List<Servico> getServicos() {
         return servicoRepository.findAll();
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletarServico(@PathVariable Long id) {
+        Optional<Servico> servico = servicoRepository.findById(id);
+
+        if(servico.isPresent()) {
+            servicoRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

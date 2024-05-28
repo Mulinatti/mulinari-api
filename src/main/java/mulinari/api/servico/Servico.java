@@ -30,7 +30,7 @@ public class Servico {
     @Column(nullable = false)
     private String data;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "servico_ajudante",
             joinColumns = @JoinColumn(name = "servico_id"),
