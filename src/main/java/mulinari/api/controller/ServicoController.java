@@ -25,12 +25,12 @@ public class ServicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> cadastrar(@RequestBody ServicoDados body) {
+    public ResponseEntity<Object> cadastrar(@RequestBody ServicoDados request) {
 
-        List<Ajudante> ajudantes = ajudanteRepository.findAllById(body.ajudantesIds());
+        List<Ajudante> ajudantes = ajudanteRepository.findAllById(request.ajudantesIds());
 
-        if(ajudantes.size() == body.ajudantesIds().size() && !body.ajudantesIds().isEmpty()) {
-            Servico servico = new Servico(body);
+        if(ajudantes.size() == request.ajudantesIds().size() && !request.ajudantesIds().isEmpty()) {
+            Servico servico = new Servico(request);
             servico.setAjudantes(ajudantes);
 
             ajudantes.forEach(ajudante -> {

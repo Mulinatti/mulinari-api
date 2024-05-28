@@ -35,17 +35,30 @@ public class AjudanteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> cadastrar(@RequestBody AjudanteDados body) {
-        if(body.idade() > 0) {
-            repository.save(new Ajudante(body));
+    public ResponseEntity<Object> cadastrar(@RequestBody AjudanteDados request) {
+        if(request.idade() > 0) {
+            repository.save(new Ajudante(request));
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Corpo da requisição incorreto");
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody Ajudante request) {
+        Optional<Ajudante> ajudante = repository.findById(id);
+
+        if(ajudante.isPresent()) {
+            request.setId(id);
+            repository.save(request);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletarAjudante(@PathVariable Long id) {
+    public ResponseEntity<Object> deletar(@PathVariable Long id) {
         Optional<Ajudante> ajudante = repository.findById(id);
 
         if(ajudante.isPresent()) {
