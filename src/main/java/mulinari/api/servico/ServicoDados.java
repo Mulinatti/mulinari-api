@@ -5,7 +5,7 @@ import mulinari.api.ajudante.Ajudante;
 
 import java.util.List;
 
-public record ServicoDados(
+public record   ServicoDados(
 
         List<Ajudante> ajudantes,
 

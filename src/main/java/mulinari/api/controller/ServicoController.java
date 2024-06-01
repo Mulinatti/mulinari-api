@@ -61,6 +61,23 @@ public class ServicoController {
     }
 
     @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody ServicoDados request) {
+        Optional<Servico> servicoExiste = servicoRepository.findById(id);
+        List<Ajudante> ajudantes = ajudanteRepository.findAllById(request.ajudantesIds());
+
+
+        if(servicoExiste.isPresent()) {
+            Servico servico = servicoExiste.get();
+            servico.setAjudantes(ajudantes);
+            servicoRepository.save(servico);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletarServico(@PathVariable Long id) {
         Optional<Servico> servico = servicoRepository.findById(id);
