@@ -1,10 +1,10 @@
 package mulinari.api.controller;
 
-import mulinari.api.ajudante.Ajudante;
-import mulinari.api.ajudante.AjudanteRepository;
-import mulinari.api.servico.Servico;
-import mulinari.api.servico.ServicoDados;
-import mulinari.api.servico.ServicoRepository;
+import jakarta.validation.Valid;
+import lombok.SneakyThrows;
+import mulinari.api.model.entity.Servico;
+import mulinari.api.model.record.ServicoDados;
+import mulinari.api.service.ServicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,35 +17,37 @@ import java.util.List;
 public class ServicoController {
 
     @Autowired
-    private ServicoRepository servicoRepository;
+    private ServicoService service;
 
-    @Autowired
-    private AjudanteRepository ajudanteRepository;
+    @GetMapping
+    public ResponseEntity<List<Servico>> getServicos() {
+        return ResponseEntity.ok().body(service.listarServicos());
+    }
+
+    @SneakyThrows
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getServico(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.buscarServico(id));
+    }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> cadastrar(@RequestBody ServicoDados body) {
-
-        List<Ajudante> ajudantes = ajudanteRepository.findAllById(body.ajudantesIds());
-
-        if(ajudantes.size() == body.ajudantesIds().size() && !body.ajudantesIds().isEmpty()) {
-            Servico servico = new Servico(body);
-            servico.setAjudantes(ajudantes);
-
-            ajudantes.forEach(ajudante -> {
-                ajudante.addServico(servico);
-            });
-
-            servicoRepository.save(servico);
-
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.badRequest().body("Informações incorretas enviadas");
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid ServicoDados request) {
+        service.cadastrarServico(request);
+        return ResponseEntity.status(201).build();
     }
 
-    @GetMapping
-    public List<Servico> getServicos() {
-        return servicoRepository.findAll();
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody ServicoDados request) {
+        service.atualizarServico(id, request);
+        return ResponseEntity.accepted().build();
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletarServico(@PathVariable Long id) {
+        service.deletarServico(id);
+        return ResponseEntity.ok().build();
     }
 }

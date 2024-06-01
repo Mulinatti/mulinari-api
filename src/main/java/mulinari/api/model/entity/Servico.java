@@ -1,11 +1,11 @@
-package mulinari.api.servico;
+package mulinari.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import mulinari.api.ajudante.Ajudante;
+import mulinari.api.model.record.ServicoDados;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,7 +19,7 @@ public class Servico {
     private Long id;
 
     @Column(nullable = false)
-    private float valor;
+    private Float valor;
 
     @Column(nullable = false)
     private String rua;
@@ -30,7 +30,7 @@ public class Servico {
     @Column(nullable = false)
     private String data;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "servico_ajudante",
             joinColumns = @JoinColumn(name = "servico_id"),
@@ -44,5 +44,6 @@ public class Servico {
         this.rua = body.rua();
         this.bairro = body.bairro();
         this.data = body.data();
+        this.ajudantes = new ArrayList<>();
     }
 }
