@@ -42,7 +42,6 @@ public class AjudanteService {
         repository.save(request);
     }
 
-    @SneakyThrows
     public void deletarAjudante(Long id) {
         ajudanteExiste(id);
         repository.deleteById(id);

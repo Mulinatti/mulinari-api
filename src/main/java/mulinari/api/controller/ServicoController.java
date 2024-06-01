@@ -1,93 +1,53 @@
 package mulinari.api.controller;
 
 import jakarta.validation.Valid;
-import mulinari.api.model.entity.Ajudante;
-import mulinari.api.repository.AjudanteRepository;
+import lombok.SneakyThrows;
 import mulinari.api.model.entity.Servico;
 import mulinari.api.model.record.ServicoDados;
-import mulinari.api.repository.ServicoRepository;
+import mulinari.api.service.ServicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/servicos")
 public class ServicoController {
 
     @Autowired
-    private ServicoRepository servicoRepository;
+    private ServicoService service;
 
-    @Autowired
-    private AjudanteRepository ajudanteRepository;
+    @GetMapping
+    public ResponseEntity<List<Servico>> getServicos() {
+        return ResponseEntity.ok().body(service.listarServicos());
+    }
+
+    @SneakyThrows
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getServico(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.buscarServico(id));
+    }
 
     @PostMapping
     @Transactional
     public ResponseEntity<Object> cadastrar(@RequestBody @Valid ServicoDados request) {
-
-        List<Ajudante> ajudantes = ajudanteRepository.findAllById(request.ajudantesIds());
-
-        if(ajudantes.size() == request.ajudantesIds().size() && !request.ajudantesIds().isEmpty()) {
-            Servico servico = new Servico(request);
-            servico.setAjudantes(ajudantes);
-
-            ajudantes.forEach(ajudante -> {
-                ajudante.addServico(servico);
-            });
-
-            servicoRepository.save(servico);
-
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.badRequest().body("Informações incorretas enviadas");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Servico>> getServico(@PathVariable Long id) {
-        Optional<Servico> servico = servicoRepository.findById(id);
-
-        if(servico.isPresent())
-            return ResponseEntity.ok().body(servico);
-
-        return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping
-    public List<Servico> getServicos() {
-        return servicoRepository.findAll();
+        service.cadastrarServico(request);
+        return ResponseEntity.status(201).build();
     }
 
     @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody ServicoDados request) {
-        Optional<Servico> servicoExiste = servicoRepository.findById(id);
-        List<Ajudante> ajudantes = ajudanteRepository.findAllById(request.ajudantesIds());
-
-
-        if(servicoExiste.isPresent()) {
-            Servico servico = servicoExiste.get();
-            servico.setAjudantes(ajudantes);
-            servicoRepository.save(servico);
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        service.atualizarServico(id, request);
+        return ResponseEntity.accepted().build();
     }
 
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletarServico(@PathVariable Long id) {
-        Optional<Servico> servico = servicoRepository.findById(id);
-
-        if(servico.isPresent()) {
-            servicoRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        service.deletarServico(id);
+        return ResponseEntity.ok().build();
     }
 }

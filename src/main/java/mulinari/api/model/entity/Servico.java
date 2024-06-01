@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import mulinari.api.model.record.ServicoDados;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -44,5 +44,6 @@ public class Servico {
         this.rua = body.rua();
         this.bairro = body.bairro();
         this.data = body.data();
+        this.ajudantes = new ArrayList<>();
     }
 }
