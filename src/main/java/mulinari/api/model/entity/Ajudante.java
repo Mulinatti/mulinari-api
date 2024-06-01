@@ -1,4 +1,4 @@
-package mulinari.api.ajudante;
+package mulinari.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mulinari.api.servico.Servico;
+import mulinari.api.model.record.AjudanteDados;
 
 import java.util.Collections;
 import java.util.List;

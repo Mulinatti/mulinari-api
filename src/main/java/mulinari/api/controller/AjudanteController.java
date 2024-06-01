@@ -1,8 +1,9 @@
 package mulinari.api.controller;
 
-import mulinari.api.ajudante.Ajudante;
-import mulinari.api.ajudante.AjudanteDados;
-import mulinari.api.ajudante.AjudanteRepository;
+import jakarta.validation.Valid;
+import mulinari.api.model.entity.Ajudante;
+import mulinari.api.model.record.AjudanteDados;
+import mulinari.api.repository.AjudanteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class AjudanteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> cadastrar(@RequestBody AjudanteDados request) {
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid AjudanteDados request) {
         if(request.idade() > 0) {
             repository.save(new Ajudante(request));
             return ResponseEntity.ok().build();

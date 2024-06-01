@@ -1,10 +1,11 @@
 package mulinari.api.controller;
 
-import mulinari.api.ajudante.Ajudante;
-import mulinari.api.ajudante.AjudanteRepository;
-import mulinari.api.servico.Servico;
-import mulinari.api.servico.ServicoDados;
-import mulinari.api.servico.ServicoRepository;
+import jakarta.validation.Valid;
+import mulinari.api.model.entity.Ajudante;
+import mulinari.api.repository.AjudanteRepository;
+import mulinari.api.model.entity.Servico;
+import mulinari.api.model.record.ServicoDados;
+import mulinari.api.repository.ServicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class ServicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> cadastrar(@RequestBody ServicoDados request) {
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid ServicoDados request) {
 
         List<Ajudante> ajudantes = ajudanteRepository.findAllById(request.ajudantesIds());
 

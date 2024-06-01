@@ -1,19 +1,17 @@
-package mulinari.api.servico;
+package mulinari.api.model.record;
 
 import jakarta.validation.constraints.NotBlank;
-import mulinari.api.ajudante.Ajudante;
+import mulinari.api.model.entity.Ajudante;
 
 import java.util.List;
 
-public record   ServicoDados(
+public record ServicoDados(
 
         List<Ajudante> ajudantes,
 
-        @NotBlank
         List<Long> ajudantesIds,
 
-        @NotBlank
-        Long valor,
+        Float valor,
 
         @NotBlank
         String rua,

@@ -1,9 +1,9 @@
-package mulinari.api.servico;
+package mulinari.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import mulinari.api.ajudante.Ajudante;
+import mulinari.api.model.record.ServicoDados;
 
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class Servico {
     private Long id;
 
     @Column(nullable = false)
-    private float valor;
+    private Float valor;
 
     @Column(nullable = false)
     private String rua;

@@ -1,5 +1,6 @@
-package mulinari.api.ajudante;
+package mulinari.api.repository;
 
+import mulinari.api.model.entity.Ajudante;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
