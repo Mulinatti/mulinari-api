@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import mulinari.api.model.entity.Ajudante;
 import mulinari.api.model.record.AjudanteDados;
 import mulinari.api.repository.AjudanteRepository;
+import mulinari.api.repository.ServicoAjudanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,9 @@ public class AjudanteService {
 
     @Autowired
     private AjudanteRepository repository;
+
+    @Autowired
+    private ServicoAjudanteRepository SARepository;
 
     public List<Ajudante> listarAjudantes() {
         return repository.findAll();

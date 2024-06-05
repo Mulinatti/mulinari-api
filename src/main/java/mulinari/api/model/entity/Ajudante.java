@@ -41,9 +41,15 @@ public class Ajudante {
     @JsonIgnoreProperties("ajudantes")
     List<Servico> servicos;
 
+    List<Servico> servicosPagos;
+    List<Servico> servicosNaoPagos;
+
     public void addServico(Servico servico) {
         this.servicos.add(servico);
     }
+
+    public void addServicoPago(Servico servico) { this.servicosPagos.add(servico);}
+    public void addServicoNaoPago(Servico servico) { this.servicosNaoPagos.add(servico);}
 
     public Ajudante(AjudanteDados body) {
         this.nome = body.nome();
@@ -52,5 +58,7 @@ public class Ajudante {
         this.dataNascimento = body.dataNascimento();
         this.telefone = body.telefone();
         this.servicos = new ArrayList<>();
+        this.servicosPagos = new ArrayList<>();
+        this.servicosNaoPagos = new ArrayList<>();
     }
 }
