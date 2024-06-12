@@ -1,6 +1,5 @@
 package mulinari.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,13 +36,8 @@ public class Ajudante {
     @Column(nullable = false)
     private String telefone;
 
-    @ManyToMany(mappedBy = "ajudantes")
-    @JsonIgnoreProperties("ajudantes")
-    List<Servico> servicos;
-
-    public void addServico(Servico servico) {
-        this.servicos.add(servico);
-    }
+    @OneToMany(mappedBy = "ajudante", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ServicoAjudante> servicos;
 
     public Ajudante(AjudanteDados body) {
         this.nome = body.nome();

@@ -3,7 +3,9 @@ package mulinari.api.service;
 import lombok.SneakyThrows;
 import mulinari.api.model.entity.Ajudante;
 import mulinari.api.model.entity.Servico;
+import mulinari.api.model.entity.ServicoAjudante;
 import mulinari.api.model.record.ServicoDados;
+import mulinari.api.repository.ServicoAjudanteRepository;
 import mulinari.api.repository.ServicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class ServicoService {
     @Autowired
     private AjudanteService ajudanteService;
 
+    @Autowired
+    private ServicoAjudanteRepository SARepository;
+
     public List<Servico> listarServicos() {
         return repository.findAll();
     }
@@ -39,21 +44,53 @@ public class ServicoService {
     public void cadastrarServico(@RequestBody ServicoDados request) {
         List<Ajudante> ajudantes = verificaAjudantes(request.ajudantesIds());
         Servico servico = new Servico(request);
-        servico.setAjudantes(ajudantes);
 
         ajudantes.forEach(ajudante -> {
-            ajudante.addServico(servico);
+            ServicoAjudante servicoAjudante = new ServicoAjudante();
+            servicoAjudante.setServico(servico);
+            servicoAjudante.setAjudante(ajudante);
+            servicoAjudante.setPago(false);
+
+            SARepository.save(servicoAjudante);
         });
 
         repository.save(servico);
     }
 
     @SneakyThrows
-    public void atualizarServico(Long id, @RequestBody ServicoDados request) {
-        Servico servico = buscarServico(id);
-        List<Ajudante> ajudantes = verificaAjudantes(request.ajudantesIds());
-        servico.setAjudantes(ajudantes);
-        repository.save(servico);
+    public void atualizarServico(Long id, ServicoDados request) {
+        repository.findById(id).map(servico -> {
+            Servico servicoAtualizado = new Servico(request);
+            servicoAtualizado.setId(servico.getId());
+            servicoAtualizado.setAjudantes(servico.getAjudantes());
+
+            List<Long> ajudantesIds = request.ajudantesIds();
+            List<ServicoAjudante> servicoAjudantes = servicoAtualizado.getAjudantes();
+
+            servicoAjudantes.removeIf(servicoAjudante -> !ajudantesIds.contains(servicoAjudante.getAjudante().getId()));
+
+            ajudantesIds.forEach(ajudante -> {
+                boolean exists = servicoAjudantes.stream().anyMatch(sa -> sa.getAjudante().getId().equals(ajudante));
+                if (!exists) {
+                    Ajudante ajudanteExiste;
+                    try {
+                        ajudanteExiste = ajudanteService.buscarAjudante(ajudante);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if(ajudanteExiste != null) {
+                        ServicoAjudante servicoAjudante = new ServicoAjudante();
+                        servicoAjudante.setServico(servicoAtualizado);
+                        servicoAjudante.setAjudante(ajudanteExiste);
+                        servicoAjudante.setPago(false);
+                        servicoAjudantes.add(servicoAjudante);
+                    }
+                }
+            });
+
+            return repository.save(servicoAtualizado);
+        });
     }
 
     public void deletarServico(Long id) {

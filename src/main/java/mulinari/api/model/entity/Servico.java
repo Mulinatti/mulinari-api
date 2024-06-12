@@ -1,6 +1,5 @@
 package mulinari.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import mulinari.api.model.record.ServicoDados;
@@ -30,14 +29,8 @@ public class Servico {
     @Column(nullable = false)
     private String data;
 
-    @ManyToMany
-    @JoinTable(
-            name = "servico_ajudante",
-            joinColumns = @JoinColumn(name = "servico_id"),
-            inverseJoinColumns = @JoinColumn(name = "ajudante_id")
-    )
-    @JsonIgnoreProperties("servicos")
-    List<Ajudante> ajudantes;
+    @OneToMany(mappedBy = "servico", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ServicoAjudante> ajudantes;
 
     public Servico(ServicoDados body) {
         this.valor = body.valor();

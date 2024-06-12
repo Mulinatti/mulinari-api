@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import mulinari.api.model.entity.Ajudante;
+import mulinari.api.model.entity.ServicoAjudante;
 
 import java.util.List;
 
 public record ServicoDados(
 
-        List<Ajudante> ajudantes,
+        List<ServicoAjudante> ajudantes,
 
         @NotEmpty
         List<Long> ajudantesIds,

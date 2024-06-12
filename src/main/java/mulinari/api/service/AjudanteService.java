@@ -36,9 +36,11 @@ public class AjudanteService {
         repository.save(ajudante);
     }
 
+    @SneakyThrows
     public void atualizarAjudante(Long id, @RequestBody Ajudante request) {
-        ajudanteExiste(id);
+        Ajudante ajudanteExiste = buscarAjudante(id);
         request.setId(id);
+        request.setServicos(ajudanteExiste.getServicos());
         repository.save(request);
     }
 
